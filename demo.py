@@ -16,7 +16,7 @@ chrome_options.add_argument(UserAgent().chrome)
 # 加socks5代理
 chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
 # 是否开启无头
-# opt.add_argument('--headless')
+chrome_options.add_argument('--headless')
 # 启动driver
 browser = webdriver.Chrome(options=chrome_options)
 # 针对url="https://www.amazon.com//bestsellers/"

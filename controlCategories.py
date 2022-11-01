@@ -1,3 +1,4 @@
+import os
 import time
 from threading import Thread
 
@@ -8,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 import finder
+from Entity import Entity
 
 # 分别在子页开启chrome，以达到更高效率
 # chrome设置
@@ -21,11 +23,11 @@ chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
 
 
 #
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 
 
 # 单个进程对某一种类进行爬取
-def entitySearch(category: str, href: str) -> list:
+def entitySearch(category: str, href: str):
     try:
         browser = webdriver.Chrome(options=chrome_options)
         browser.get(href)
@@ -92,6 +94,18 @@ def entitySearch(category: str, href: str) -> list:
     print(category + "种类获取成功")
     browser.quit()
     # 开始记录在文件中
+    root_path = 'result'
+    path = root_path + '/' + category
+    isExists = os.path.exists(root_path)
+    if not isExists:
+        # 如果不存在则创建目录
+        # 创建目录操作函数
+        os.makedirs(path)
+    with open(path, 'a', encoding='utf-8') as f:
+        for item in Entities:
+            f.write('\n')
+            f.write(Entity.toString(item))
+    print(category + "记录完成！")
 
 
 # 多线程
