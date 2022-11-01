@@ -1,10 +1,4 @@
-from fake_useragent import UserAgent
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-
-from controlCategories import controlCategories
+from controlCategories import *
 
 # chrome设置
 # 伪装设置
@@ -14,7 +8,7 @@ chrome_options.add_experimental_option('useAutomationExtension', False)
 chrome_options.add_argument('lang=zh-CN,zh,zh-TW,en-US,en')
 chrome_options.add_argument(UserAgent().chrome)
 # 加socks5代理
-chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
+# chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
 # 是否开启无头
 chrome_options.add_argument('--headless')
 # 启动driver
@@ -47,13 +41,31 @@ try:
     print("重复" + str(count) + "次")
     print("*" * 50)
     print("已获取到所有种类和链接")
+    count_m = 1
+    for m in categoryText:
+        print(str(count_m) + ". " + m + '\n')
+        count_m = count_m + 1
+    print('\n')
+    while True:
+        one = input("\nchoose one\n")
+        if one.isdigit():
+            break
+        print("\nwrong input\n")
+    one = int(one) - 1
+    print("you choose " + categoryText[int(one)])
     #    with open('result.txt', 'a', encoding='utf-8') as f:
     #        for item in names:
     #            f.write('\n')
     #            f.write(item.text)
     browser.quit()
     # 开始进入不同种类爬取
-    Result = controlCategories(categoryText, hrefs)
+    # Result = controlCategories(categoryText, hrefs)
+    # 修正后单线程版本
+    for i in range(1, 3):
+        print("\n总栏第" + str(i) + "页\n")
+        href = hrefs[int(one)]
+        href = href + "/?pg=" + str(i)
+        entitySearch(categoryText[int(one)], href)
     print("子页爬取完毕")
     # 子页爬取完毕
     browser.quit()

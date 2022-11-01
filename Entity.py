@@ -37,15 +37,20 @@ class Entity:
 
     def toString(self) -> str:
         a = "----------" + self.name + '--------------' + '\n'
-        b = "name: " + str(self.name) + '\n'
-        c = "img(gallery): " + str(self.img) + '\n'
-        d = "price: " + str(self.price) + '\n'
-        e = "brief: \n" + str(self.brief) + '\n'
-        f = "description: " + str(self.description) + '\n'
-        g = "country: " + str(self.country) + '\n'
-        h = "ID of product: " + str(self.IDE) + '\n'
-        i = "ratings: " + str(self.ratings) + '\n'
-        j = "details: " + '\n' + str(self.product_information) + '\n'
+        b = "\nname: " + str(self.name) + '\n'
+        c = "\nimg(gallery): " + str(self.img) + '\n'
+        d = "\nprice: " + str(self.price) + '\n'
+        e = "\nbrief: \n" + str(self.brief) + '\n'
+        f = "\ndescription: \n" + str(self.description) + '\n'
+        g = "\ncountry: " + str(self.country) + '\n'
+        h = "\nID of product: " + str(self.IDE) + '\n'
+        i = "\nratings: " + str(self.ratings) + '\n'
+        j = "\ndetails: \n"
+        dic = ""
+        for key in self.product_information:
+            tmp = "      " + str(key) + "  " + str(self.product_information[key])
+            dic = dic + '\n' + tmp
+        j = j + dic
         res = a + b + c + d + e + f + g + h + i + j
-        res = res + "----------------------------------------------" + '\n'
+        res = res + "\n--------------------------------------------------------------------------------------------------" + '\n\n\n\n'
         return res

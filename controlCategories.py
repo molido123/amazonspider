@@ -3,6 +3,7 @@ import time
 from threading import Thread
 
 from fake_useragent import UserAgent
+from rich.progress import track
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,7 +20,7 @@ chrome_options.add_experimental_option('useAutomationExtension', False)
 chrome_options.add_argument('lang=zh-CN,zh,zh-TW,en-US,en')
 chrome_options.add_argument(UserAgent().random)
 # 加socks5代理
-chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
+# chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
 
 
 #
@@ -63,6 +64,8 @@ def entitySearch(category: str, href: str):
             print(e)
             entities = origin0
         # end
+        #
+        #
         hrefsOfEntities = []
         namesOfEntities = []
         imagesOfEntities = []
@@ -81,19 +84,9 @@ def entitySearch(category: str, href: str):
         print("entitySearch函数出错")
         return "error"
     print(str(category) + "全部商品的简略信息获取成功")
-    # 某一种类的大全
-    Entities = []
-    count3 = 1
-    for i in hrefsOfEntities:
-        try:
-            Entities.append(finder.findEntity(browser, i, namesOfEntities[count3], imagesOfEntities[count3]))
-            count3 = count3 + 1
-        except Exception as e:
-            print(e)
-            print(namesOfEntities[count3] + "获取失败！")
-    print(category + "种类获取成功")
-    browser.quit()
-    # 开始记录在文件中
+    #
+    #
+    # 记录在文件中
     root_path = 'result'
     path = root_path + '/' + category
     isExists = os.path.exists(root_path)
@@ -102,13 +95,22 @@ def entitySearch(category: str, href: str):
         # 创建目录操作函数
         os.makedirs(path)
     with open(path, 'a', encoding='utf-8') as f:
-        for item in Entities:
-            f.write('\n')
-            f.write(Entity.toString(item))
+        for i in track(range(len(hrefsOfEntities))):
+            try:
+                tmp = finder.findEntity(browser, hrefsOfEntities[i], namesOfEntities[i], imagesOfEntities[i])
+                f.write('\n')
+                f.write(Entity.toString(tmp))
+                print("已经完成" + str(i + 1) + "个（共50个）")
+            except Exception as e:
+                print(e)
+                print(namesOfEntities[i] + "获取失败！")
+    print(category + "种类获取成功")
+    browser.quit()
     print(category + "记录完成！")
 
 
 # 多线程
+# 遇到些奇怪的问题，暂时改为单线程
 def controlCategories(categories: list, hrefs: list):
     try:
         count1 = 0
