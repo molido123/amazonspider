@@ -1,34 +1,53 @@
 # 价格的xpath
-import time
 import re
+import time
+
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from Entity import *
 
 
 # 商品获取
-def findEntity(browser, href, name, image):
+def findEntity(browser, href: str, name: str, image: str) -> Entity:
     time.sleep(1)
     # id_ = re.findall("/dp/([a-z-A-Z-0-9]*)/", href)
     # comments = reviewsFinder(id_[0], browser)
+    #
+    # Entity要素
     # 商品价格
     price0 = ""
     # 商品名称
     name0 = name
     # 商品简介（about this item）
     brief0 = ""
-    # Feature&details
-    features0 = ""
+    # description
+    description0 = ""
     # product image
     image0 = image
     # origin form
     country0 = ""
     # product information
-    product_information = {"name": name0}
+    product_information = {}
+    # 物品编号
+    IDE = re.findall("/dp/([a-z-A-Z-0-9]*)/", href)[0]
+    # 评论数量
+    ratings = "0"
+    #
+    #
+    # 获取第一页面
     browser.get(href)
+    # 预防弹窗
     browser.refresh()
+    # 得到description
+    try:
+        xpath_description = '//*[@id="productDescription"]'
+        description0 = \
+            WebDriverWait(browser, 15).until(EC.presence_of_all_elements_located((By.XPATH, xpath_description)))[0].text
+    except Exception as e:
+        print(e)
+        description0 = "not found!"
     # 得到价格
     try:
         time.sleep(4)
@@ -39,7 +58,7 @@ def findEntity(browser, href, name, image):
         b = []
         c = []
         try:
-            a = WebDriverWait(browser, 15).until(EC.presence_of_all_elements_located((By.XPATH, xpath1)))
+            a = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath1)))
         except Exception as e:
             print(e)
         try:
@@ -127,7 +146,30 @@ def findEntity(browser, href, name, image):
     except Exception as e:
         print(e)
         print(name0 + "商品参数检测异常")
-    print()
+    # 设置国家
+    try:
+        country0 = product_information.get('Country of Origin :')
+        if country0 is None:
+            country0 = product_information.get('Country of Origin')
+    except Exception as e:
+        print(e)
+        country0 = "国家不明"
+    # 获取评论数
+    # //div[@data-hook="total-review-count"] 评论数量 在评论总页面
+    ratings_url = "https://www.amazon.com//product-reviews/"
+    ratings_url = ratings_url + IDE
+    browser.get(ratings_url)
+    xpath_ratings = '//div[@data-hook="total-review-count"]'
+    try:
+        ratings = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath_ratings)))[
+            0].text
+    except Exception as e:
+        print(e)
+        print(name0 + "评论数量获取异常")
+    result = Entity(name0, image0, price0.replace('\n', '.'), brief0, description0, country0, product_information, IDE,
+                    ratings)
+    print(Entity.toString(result))
+    return result
 
 
 # 评论获取
@@ -138,6 +180,7 @@ def findEntity(browser, href, name, image):
 # raw+?pageNumber=3 # 换页
 
 # 查找评论暂时废弃
+@DeprecationWarning
 def reviewsFinder(id_, browser):
     raw = "https://www.amazon.com//product-reviews/"
     count = 1

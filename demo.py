@@ -1,15 +1,10 @@
-from selenium.webdriver.support import expected_conditions as EC
+from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-import time
-
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from controlCategories import controlCategories
-from fake_useragent import UserAgent
-
 
 # chrome设置
 # 伪装设置
@@ -61,6 +56,7 @@ try:
     Result = controlCategories(categoryText, hrefs)
     print("子页爬取完毕")
     # 子页爬取完毕
+    browser.quit()
 except Exception as e:
     print(e)
     browser.quit()

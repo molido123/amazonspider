@@ -1,14 +1,13 @@
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import finder
 import time
-from selenium.webdriver.common.by import By
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from threading import Thread
-from fake_useragent import UserAgent
 
+from fake_useragent import UserAgent
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+import finder
 
 # 分别在子页开启chrome，以达到更高效率
 # chrome设置
@@ -26,7 +25,7 @@ chrome_options.add_argument("proxy-server=socks5://127.0.0.1:1089")
 
 
 # 单个进程对某一种类进行爬取
-def entitySearch(category, href):
+def entitySearch(category: str, href: str) -> list:
     try:
         browser = webdriver.Chrome(options=chrome_options)
         browser.get(href)
@@ -80,17 +79,28 @@ def entitySearch(category, href):
         print("entitySearch函数出错")
         return "error"
     print(str(category) + "全部商品的简略信息获取成功")
-    # details是一个由entity对象组成列表
+    # 某一种类的大全
+    Entities = []
+    count3 = 1
+    for i in hrefsOfEntities:
+        try:
+            Entities.append(finder.findEntity(browser, i, namesOfEntities[count3], imagesOfEntities[count3]))
+            count3 = count3 + 1
+        except Exception as e:
+            print(e)
+            print(namesOfEntities[count3] + "获取失败！")
+    print(category + "种类获取成功")
+    browser.quit()
+    # 开始记录在文件中
 
 
 # 多线程
-def controlCategories(categories, hrefs):
+def controlCategories(categories: list, hrefs: list):
     try:
         count1 = 0
         for href in hrefs:
             Thread(target=entitySearch(categories[count1], href)).run()
             count1 = count1 + 1
-
     except Exception as e:
         print(e)
         print("controlCategories")
