@@ -80,8 +80,7 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
         elif len(c) != 0 and c[0].text != "":
             price0 = c[0].text
         else:
-            price0 = "Not Found!"
-            print(name0 + "not found price")
+            price0 = str(re.findall("\n(\$[0-9]*.[0-9]*)", name0)[0])
 
     except Exception as e:
         print(e)

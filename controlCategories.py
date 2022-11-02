@@ -95,16 +95,16 @@ def entitySearch(category: str, href: str):
         # 如果不存在则创建目录
         # 创建目录操作函数
         os.makedirs(path)
-    with open(path, 'a', encoding='utf-8') as f:
-        for i in track(range(len(hrefsOfEntities))):
-            try:
+    for i in track(range(len(hrefsOfEntities))):
+        try:
+            with open(path, 'a', encoding='utf-8') as f:
                 tmp = finder.findEntity(browser, hrefsOfEntities[i], namesOfEntities[i], imagesOfEntities[i])
                 f.write('\n')
                 f.write(Entity.toString(tmp))
                 print("已经完成" + str(i + 1) + "个（共50个）")
-            except Exception as e:
-                print(e)
-                print(namesOfEntities[i] + "获取失败！")
+        except Exception as e:
+            print(e)
+            print(namesOfEntities[i] + "获取失败！")
     print(category + "种类获取成功")
     browser.quit()
     print(category + "记录完成！")
