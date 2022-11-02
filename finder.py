@@ -39,13 +39,14 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
     # 获取第一页面
     browser.get(href)
     # 预防弹窗
-    browser.refresh()
+    # browser.refresh()
     # 得到description
     try:
         xpath_description = '//*[@id="productDescription"]'
         description0 = \
             WebDriverWait(browser, 15).until(EC.presence_of_all_elements_located((By.XPATH, xpath_description)))[0].text
     except Exception as e:
+        print(e)
         description0 = "not found!"
     # 得到价格
     try:
@@ -59,15 +60,18 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
         try:
             a = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath1)))
         except Exception as e:
-            pass
+            print(e)
+            a = []
         try:
             b = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath2)))
         except Exception as e:
-            pass
+            print(e)
+            b = []
         try:
             c = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath3)))
         except Exception as e:
-            pass
+            print(e)
+            c = []
 
         if len(a) != 0 and a[0].text != "":
             price0 = a[0].text
@@ -91,11 +95,13 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
         try:
             a1 = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath1)))
         except Exception as e:
-            pass
+            print(e)
+            a1 = []
         try:
             b1 = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath2)))
         except Exception as e:
-            pass
+            print(e)
+            b1 = []
         if len(a1) != 0 and a1[0].text != "":
             brief0 = a1[0].text
         elif len(b1) != 0 and b1[0].text != "":
@@ -125,11 +131,11 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
         try:
             a4 = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath0)))
         except Exception as e:
-            pass
+            print(e)
         try:
             b4 = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath1)))
         except Exception as e:
-            pass
+            print(e)
         if len(a4) != 0:
             for x in a4:
                 left = x.find_elements(By.XPATH, './th')[0].text
@@ -164,8 +170,8 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
         print(e)
         print(name0 + "评论数量获取异常")
     result = Entity(name0.split('\n')[0] + " " + name0.split('\n')[1], image0, price0.replace('\n', '.'), brief0,
-                    description0, country0, product_information, IDE,
-                    ratings)
+                    description0, country0, product_information, IDE, ratings)
+
     return result
 
 

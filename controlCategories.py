@@ -65,16 +65,17 @@ def entitySearch(category: str, href: str):
             entities = origin0
         # end
         #
-        #
+        count_en = 0
         hrefsOfEntities = []
         namesOfEntities = []
         imagesOfEntities = []
         for entity in entities:
             namesOfEntities.append(entity.text)
             hrefsOfEntities.append(
-                str(entity.find_elements(By.XPATH, '//*[@id="gridItemRoot"]//a[2]')[0].get_attribute("href")))
+                str(entity.find_elements(By.XPATH, '//*[@id="gridItemRoot"]//a[2]')[count_en].get_attribute("href")))
             imagesOfEntities.append(
-                entity.find_elements(By.XPATH, '//*[@id="gridItemRoot"]//img')[0].get_attribute("src"))
+                entity.find_elements(By.XPATH, '//*[@id="gridItemRoot"]//img')[count_en].get_attribute("src"))
+            count_en = count_en + 1
         if (len(hrefsOfEntities) != len(namesOfEntities) or len(imagesOfEntities) != len(namesOfEntities)) and len(
                 imagesOfEntities) != 0:
             print("entitySearch获取的商品信息不符合要求")
