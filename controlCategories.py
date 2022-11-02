@@ -89,7 +89,7 @@ def entitySearch(category: str, href: str):
     #
     # 记录在文件中
     root_path = 'result'
-    path = root_path + '/' + category
+    path = root_path + '/' + category + ".txt"
     isExists = os.path.exists(root_path)
     if not isExists:
         # 如果不存在则创建目录
@@ -100,7 +100,8 @@ def entitySearch(category: str, href: str):
             with open(path, 'a', encoding='utf-8') as f:
                 tmp = finder.findEntity(browser, hrefsOfEntities[i], namesOfEntities[i], imagesOfEntities[i])
                 f.write('\n')
-                f.write(Entity.toString(tmp))
+                if Entity.country is not None and "China" in str(Entity.country):
+                    f.write(Entity.toString(tmp))
                 print("已经完成" + str(i + 1) + "个（共50个）")
         except Exception as e:
             print(e)

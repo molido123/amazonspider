@@ -165,6 +165,8 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
     ratings_url = "https://www.amazon.com//product-reviews/"
     ratings_url = ratings_url + IDE
     browser.get(ratings_url)
+    time.sleep(3)
+    browser.refresh()
     xpath_ratings = '//div[@data-hook="total-review-count"]'
     try:
         ratings = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, xpath_ratings)))[
