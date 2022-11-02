@@ -88,7 +88,7 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
 
     except Exception as e:
         print(e)
-        print(name0 + "价格获取异常")
+        print(name0.split('\n')[0] + "价格获取异常")
     # 得到简介
     try:
         xpath1 = '//*[@id="feature-bullets"]'
@@ -114,7 +114,7 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
             brief0 = "Not Found!"
     except Exception as e:
         print(e)
-        print(name0 + '简介获取异常')
+        print(name0.split('\n')[0] + '简介获取异常')
     # 获取product information
     # 网页结构分为两种
     # 第一种//*[@id="prodDetails"]
@@ -141,17 +141,23 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
             print(e)
         if len(a4) != 0:
             for x in a4:
-                left = x.find_elements(By.XPATH, './th')[0].text
-                right = x.find_elements(By.XPATH, './td')[0].text
-                product_information[left] = right
+                try:
+                    left = x.find_elements(By.XPATH, './th')[0].text
+                    right = x.find_elements(By.XPATH, './td')[0].text
+                    product_information[left] = right
+                except:
+                    pass
         elif len(b4) != 0:
             for y in b4:
-                left = y.find_elements(By.XPATH, './span/span[1]')[0].text
-                right = y.find_elements(By.XPATH, './span/span[2]')[0].text
-                product_information[left] = right
+                try:
+                    left = y.find_elements(By.XPATH, './span/span[1]')[0].text
+                    right = y.find_elements(By.XPATH, './span/span[2]')[0].text
+                    product_information[left] = right
+                except:
+                    pass
     except Exception as e:
         print(e)
-        print(name0 + "商品参数检测异常")
+        print(name0.split('\n')[0] + "商品参数检测异常")
     # 设置国家
     try:
         country0 = product_information.get('Country of Origin :')
@@ -173,7 +179,7 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
             0].text
     except Exception as e:
         print(e)
-        print(name0 + "评论数量获取异常")
+        print(name0.split('\n')[0] + "评论数量获取异常")
     result = Entity(name0.split('\n')[0] + " " + name0.split('\n')[1], image0, price0.replace('\n', '.'), brief0,
                     description0, country0, product_information, IDE, ratings)
 

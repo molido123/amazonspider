@@ -100,7 +100,7 @@ def entitySearch(category: str, href: str):
             with open(path, 'a', encoding='utf-8') as f:
                 tmp = finder.findEntity(browser, hrefsOfEntities[i], namesOfEntities[i], imagesOfEntities[i])
                 f.write('\n')
-                if tmp.country is not None and "China" in str(tmp.country):
+                if tmp.getCountry() is not None and "China" in tmp.getCountry():
                     f.write(Entity.toString(tmp))
                 print("已经完成" + str(i + 1) + "个（共50个）")
         except Exception as e:

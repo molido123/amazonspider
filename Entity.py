@@ -54,3 +54,6 @@ class Entity:
         res = a + b + c + d + e + f + g + h + i + j
         res = res + "\n--------------------------------------------------------------------------------------------------" + '\n\n\n\n'
         return res
+
+    def getCountry(self) -> str:
+        return str(self.country)
