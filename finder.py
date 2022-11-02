@@ -38,6 +38,10 @@ def findEntity(browser, href: str, name: str, image: str) -> Entity:
     #
     # 获取第一页面
     browser.get(href)
+    #
+    #
+    time.sleep(4)
+    browser.refresh()
     # 预防弹窗
     # browser.refresh()
     # 得到description
